@@ -1,0 +1,38 @@
+- name: ensure apache is at the latest version
+  yum:
+    name: httpd
+    state: latest
+
+- name: prepare directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: apache
+    group: apache
+    mode: '0644'
+  become: true
+  with_items:
+    - /var/www/example1
+    - /var/www/example2
+  tags:
+    - config_update
+
+- name: write the apache config file
+  template:
+    src: httpd.j2
+    dest: /etc/httpd/conf.d/{{ conf_name }}.conf
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+  notify:
+  - restart apache
+  tags:
+    - config_update
+
+- name: ensure apache is running
+  service:
+    name: httpd
+    state: started
+  tags:
+    - config_update

@@ -1,0 +1,14 @@
+# Apache doit écouter sur le port 80
+<VirtualHost *:{{ http_port }}>
+    DocumentRoot "/var/www/example1"
+    ServerName www.example.com
+
+    # Autres directives ici
+</VirtualHost>
+
+<VirtualHost *:{{ http_port }}>
+    DocumentRoot "/var/www/example2"
+    ServerName www.example.org
+
+    # Autres directives ici
+</VirtualHost>
