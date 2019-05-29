@@ -1,0 +1,9 @@
+[all_stuff:children]
+webservers
+personalservers
+
+[webservers]
+192.168.23.182
+
+[personalservers]
+192.168.23.182
