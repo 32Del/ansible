@@ -1,3 +1,8 @@
 http_port: 80
 max_clients: 200
 conf_name: default
+virtual_hosts:
+  - server_name: www.example.com
+    document_root: "/var/www/example1"
+  - server_name: www.example.org
+    document_root: "/var/www/example2"

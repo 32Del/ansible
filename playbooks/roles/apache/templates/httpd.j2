@@ -1,14 +1,6 @@
-# Apache doit écouter sur le port 80
+{% for virtual_host in virtual_hosts %}
 <VirtualHost *:{{ http_port }}>
-    DocumentRoot "/var/www/example1"
-    ServerName www.example.com
-
-    # Autres directives ici
+    DocumentRoot {{ virtual_host.document_root }}
+    ServerName {{ virtual_host.server_name }}
 </VirtualHost>
-
-<VirtualHost *:{{ http_port }}>
-    DocumentRoot "/var/www/example2"
-    ServerName www.example.org
-
-    # Autres directives ici
-</VirtualHost>
+{% endfor %}

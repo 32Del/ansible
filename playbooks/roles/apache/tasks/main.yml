@@ -5,15 +5,14 @@
 
 - name: prepare directories
   file:
-    path: "{{ item }}"
+    path: "{{ item.document_root }}"
     state: directory
     owner: apache
     group: apache
     mode: '0644'
   become: true
   with_items:
-    - /var/www/example1
-    - /var/www/example2
+    - "{{ virtual_hosts }}"
   tags:
     - config_update
 
