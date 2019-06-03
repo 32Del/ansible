@@ -1,0 +1,59 @@
+# - name: ensure yum-utils is at the latest version
+#   yum:
+#     name: yum-utils
+#     state: latest
+#   register: install_yum_utils
+
+# - name: ensure device-mapper-persistent-data is at the latest version
+#   yum:
+#     name: device-mapper-persistent-data
+#     state: latest
+#   register: install_device_mapper_persistent_data
+
+# - name: ensure lvm2 is at the latest version
+#   yum:
+#     name: lvm2
+#     state: latest  
+#   register: install_lvm2
+
+# - name: add docker repo
+#   shell: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+#   when: install_yum_utils, install_device_mapper_persistent_data, install_lvm2
+
+- name: install list package
+  yum:
+    name: "{{ item }}"
+    state: installed
+    update_cache: yes
+  with_items:
+    - yum-utils
+    - device-mapper-persistent-data
+    - lvm2
+  register: list_package
+
+- name: add Docker repo
+  get_url:
+    url: https://download.docker.com/linux/centos/docker-ce.repo
+    dest: /etc/yum.repos.d/docer-ce.repo
+  become: true
+  when: list_package
+
+- name: install Docker CE
+  yum:
+    name: "{{ item }}"
+    state: installed
+    update_cache: yes
+  with_items:
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io
+  when: list_package
+  notify:
+    - enable service docker 
+
+- name: ensure docker is running
+  service:
+    name: docker
+    state: started
+  tags:
+    - config_update    
