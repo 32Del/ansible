@@ -2,6 +2,8 @@
   yum:
     name: httpd
     state: latest
+  tags:
+    - apache
 
 - name: prepare directories
   file:
@@ -15,6 +17,7 @@
     - "{{ virtual_hosts }}"
   tags:
     - config_update
+    - apache
 
 - name: write the apache config file
   template:
@@ -28,6 +31,7 @@
   - restart apache
   tags:
     - config_update
+    - apache
 
 - name: ensure apache is running
   service:
@@ -35,3 +39,11 @@
     state: started
   tags:
     - config_update
+    - apache
+
+- name: Enable service httpd, and not touch the state
+  service:
+    name: httpd
+    enabled: yes
+  tags:
+    - apache

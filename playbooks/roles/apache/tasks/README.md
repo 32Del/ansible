@@ -1,2 +1,0 @@
-# tasks
-tasks - contains the main list of tasks to be executed by the role.

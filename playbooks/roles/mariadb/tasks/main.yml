@@ -1,0 +1,40 @@
+- name: add repository for mariaDB 10.3
+  template:
+    src: mariadb.repo.j2
+    dest: /etc/yum.repos.d/MariaDB.repo
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+  tags:
+    - mariadb_repo
+    - mariadb
+
+- name: remove the mysql-client package
+  yum:
+    name: mysql-client
+    state: absent
+  tags:
+    - mariadb
+
+- name: ensure mariaDB is at the latest version
+  yum:
+    name: mariadb-server
+    state: latest
+  tags:
+    - mariadb
+
+- name: ensure mariaDB is running
+  service:
+    name: mariadb
+    state: started
+  tags:
+    - config_update_mariadb  
+    - mariadb 
+
+- name: Enable service mariaDB, and not touch the state
+  service:
+    name: mariadb
+    enabled: yes
+  tags:
+    - mariadb
