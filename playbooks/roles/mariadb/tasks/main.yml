@@ -8,33 +8,17 @@
   become: true
   tags:
     - mariadb_repo
-    - mariadb
-
-- name: remove the mysql-client package
-  yum:
-    name: mysql-client
-    state: absent
-  tags:
-    - mariadb
 
 - name: ensure mariaDB is at the latest version
   yum:
     name: mariadb-server
     state: latest
-  tags:
-    - mariadb
+  notify:
+    - enable service mariadb 
 
 - name: ensure mariaDB is running
   service:
     name: mariadb
     state: started
   tags:
-    - config_update_mariadb  
-    - mariadb 
-
-- name: Enable service mariaDB, and not touch the state
-  service:
-    name: mariadb
-    enabled: yes
-  tags:
-    - mariadb
+    - config_update

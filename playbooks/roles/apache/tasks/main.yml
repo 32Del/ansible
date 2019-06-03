@@ -1,9 +1,9 @@
 - name: ensure apache is at the latest version
   yum:
     name: httpd
-    state: latest
-  tags:
-    - apache
+    state: latest  
+  notify:
+    - enable service apache  
 
 - name: prepare directories
   file:
@@ -17,8 +17,7 @@
     - "{{ virtual_hosts }}"
   tags:
     - config_update
-    - apache
-
+    
 - name: write the apache config file
   template:
     src: httpd.j2
@@ -28,22 +27,13 @@
     mode: '0644'
   become: true
   notify:
-  - restart apache
+    - restart apache
   tags:
     - config_update
-    - apache
-
+    
 - name: ensure apache is running
   service:
     name: httpd
     state: started
   tags:
     - config_update
-    - apache
-
-- name: Enable service httpd, and not touch the state
-  service:
-    name: httpd
-    enabled: yes
-  tags:
-    - apache
